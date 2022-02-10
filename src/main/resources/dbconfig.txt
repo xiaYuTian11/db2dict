@@ -1,6 +1,9 @@
-url=jdbc:mysql://192.168.0.141:3306/police_new?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+## 注意mysql url 需要在后面添加 nullCatalogMeansCurrent=true
+url=jdbc:mysql://127.0.0.1:3306/police_new?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
 driver=com.mysql.cj.jdbc.Driver
 username=root
-password=root
+password=123456
 ## mysql,oracle,pgsql,kingbase,dm
 type=mysql
+## 导出路径
+exportPath=C:\\Users\\tmw\\Desktop\\代码注释\\police_new数据字典.doc

@@ -8,7 +8,9 @@ import top.tanmw.db2dict.entity.DbEnum;
  */
 public class DbConfigFactory {
 
-    public static DbConfig getDbConfig(DbEnum dbEnum) {
+    public static DbEnum dbEnum = null;
+
+    public static DbConfig getDbConfig() {
         switch (dbEnum) {
             case MYSQL:
                 return new MysqlConfig();

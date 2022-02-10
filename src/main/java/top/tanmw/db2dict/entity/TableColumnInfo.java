@@ -8,4 +8,5 @@ package top.tanmw.db2dict.entity;
  */
 public class TableColumnInfo {
 
+
 }
