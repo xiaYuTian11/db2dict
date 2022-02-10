@@ -6,5 +6,5 @@ package top.tanmw.db2dict.db;
  * @author TMW
  * @since 2022/2/10 10:04
  */
-public class DmConfig implements DbConfig {
+public class DmConfig extends AbstractDbConfig {
 }

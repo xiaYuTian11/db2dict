@@ -2,3 +2,5 @@ url=jdbc:mysql://192.168.0.141:3306/police_new?useUnicode=true&characterEncoding
 driver=com.mysql.cj.jdbc.Driver
 username=root
 password=root
+## mysql,oracle,pgsql,kingbase,dm
+type=mysql

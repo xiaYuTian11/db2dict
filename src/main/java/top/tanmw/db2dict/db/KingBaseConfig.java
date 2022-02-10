@@ -6,5 +6,5 @@ package top.tanmw.db2dict.db;
  * @author TMW
  * @since 2022/2/10 10:04
  */
-public class KingBaseConfig implements DbConfig{
+public class KingBaseConfig extends AbstractDbConfig{
 }

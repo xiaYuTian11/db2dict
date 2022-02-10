@@ -10,5 +10,6 @@ public class DbConstant {
     public static String DRIVER = "driver";
     public static String USERNAME = "username";
     public static String PASSWORD = "password";
+    public static String TYPE = "type";
 
 }

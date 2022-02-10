@@ -2,16 +2,12 @@ package top.tanmw.db2dict.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.tanmw.db2dict.entity.DbConnection;
+import top.tanmw.db2dict.entity.TableColumnInfo;
+import top.tanmw.db2dict.entity.TableInfo;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.sql.DriverManager;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Properties;
-
-import static top.tanmw.db2dict.entity.DbConstant.DRIVER;
-import static top.tanmw.db2dict.entity.DbConstant.URL;
 
 /**
  * 数据库接口
@@ -56,26 +52,22 @@ public interface DbConfig {
             };
 
     /**
-     * 获取连接
+     * 初始化
+     */
+    public void init(Properties properties);
+
+    /**
+     * 获取表信息
      *
      * @return
      */
-    default DbConnection getDbConfig() {
-        DbConnection dbConnection = new DbConnection();
-        Properties properties = new Properties();
-        try {
-            // 使用InPutStream流读取properties文件
-            final String configPath = DbConfig.class.getClassLoader().getResource("/db.config").toString();
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(configPath));
-            properties.load(bufferedReader);
-            Class.forName(properties.getProperty(DRIVER));
-            dbConnection.setConnection(DriverManager.getConnection(URL));
-            dbConnection.setMetaData(dbConnection.getConnection().getMetaData());
-        } catch (Exception e) {
-            LOGGER.error("读取配置文件失败");
-            return null;
-        }
-        return dbConnection;
-    }
+    List<TableInfo> getTableList();
+
+    /**
+     * 获取表结构信息
+     *
+     * @return
+     */
+    List<TableColumnInfo> getTableColumnList();
 
 }
