@@ -5,6 +5,7 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import top.tanmw.db2dict.entity.TableInfo;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.util.List;
@@ -235,6 +236,11 @@ public class WordUtil {
      * @throws Exception
      */
     public void saveDOCUMENT(String savePath) throws Exception {
+        final File file = new File(savePath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
         FileOutputStream fos = new FileOutputStream(savePath);
         DOCUMENT.write(fos);
         fos.close();
