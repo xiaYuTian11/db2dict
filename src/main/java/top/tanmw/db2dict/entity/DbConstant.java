@@ -23,6 +23,16 @@ public class DbConstant {
                 }
             };
     /**
+     * 表结构信息
+     */
+    public static LinkedHashMap<String, String> TABLE_INFO_RELATION = new
+            LinkedHashMap<String, String>() {
+                {
+                    this.put("tableName", "表名称");
+                    this.put("tableComment", "表备注");
+                }
+            };
+    /**
      * 表索引信息
      */
     public static LinkedHashMap<String, String> TABLE_INDEX = new

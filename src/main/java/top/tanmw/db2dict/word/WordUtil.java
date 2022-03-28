@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.util.List;
 
+import static top.tanmw.db2dict.entity.DbConstant.TABLE_INFO_RELATION;
 import static top.tanmw.db2dict.entity.DbConstant.TABLE_RELATION;
 import static top.tanmw.db2dict.word.WordConfig.*;
 
@@ -22,6 +23,7 @@ public class WordUtil {
     private static XWPFDocument DOCUMENT = new XWPFDocument();
 
     public void writeTableToWord(List<TableInfo> tableList) throws Exception {
+        createTableListNormal(tableList);
         for (TableInfo tableInfo : tableList) {
             if (TITLE_ADD_INDEX) {
                 int index = tableList.indexOf(tableInfo) + 1;
@@ -54,6 +56,32 @@ public class WordUtil {
         setRowText(table, tableInfo);
         // 往表格中插入第一列标题内容
         setFirstRowText(table);
+    }
+
+    /**
+     * 往word插入一张表格
+     *
+     * @param tableInfoList
+     * @throws Exception
+     */
+    private void createTableListNormal(List<TableInfo> tableInfoList)
+            throws Exception {
+        // 添加一个文档
+        addNewPage(BreakType.TEXT_WRAPPING);
+
+        // 设置标题
+        setTableTitle("表清单");
+        // final List<List<String>> fieldList = tableInfoList.getFieldList();
+        // 创建表格
+        XWPFTable table = createTable(tableInfoList.size(), TABLE_INFO_RELATION.size());
+        // 设置表格中行列内容
+        Integer count = 0;
+        for (TableInfo tableInfo : tableInfoList) {
+            setRowTableText(table, tableInfo, count);
+            count++;
+        }
+        // 往表格中插入第一列标题内容
+        setTableFirstRowText(table);
     }
 
     /**
@@ -123,6 +151,24 @@ public class WordUtil {
     }
 
     /**
+     * 设置表格第一行内容
+     *
+     * @param table
+     */
+    private void setTableFirstRowText(XWPFTable table) {
+        XWPFTableRow firstRow = null;
+        XWPFTableCell firstCell = null;
+        firstRow = table.insertNewTableRow(0);
+        firstRow.setHeight(FIRST_ROW_HEIGHT);
+        // 表关系列
+        for (String fieldValue : TABLE_INFO_RELATION.values()) {
+            firstCell = firstRow.addNewTableCell();
+            createVSpanCell(firstCell, fieldValue, FIRST_ROW_COLOR,
+                    FIRST_ROW_CEL_WIDTH, STMerge.RESTART);
+        }
+    }
+
+    /**
      * 设置每行的内容
      *
      * @param table
@@ -144,6 +190,34 @@ public class WordUtil {
             }
         }
 
+    }
+
+    /**
+     * 设置每行的内容
+     *
+     * @param table
+     * @param tableInfo
+     */
+    private void setRowTableText(XWPFTable table, TableInfo tableInfo, Integer index) {
+        XWPFTableRow firstRow = null;
+        XWPFTableCell firstCell = null;
+
+        firstRow = table.getRow(index);
+        if (firstRow == null) {
+            firstRow = table.createRow();
+        }
+        firstRow.setHeight(ROW_HEIGHT);
+        firstCell = firstRow.getCell(0);
+        setCellText(firstCell, tableInfo.getTableName(), ROW_COLOR, ROW_CEL_WIDTH);
+
+        firstRow = table.getRow(index);
+        if (firstRow == null) {
+            firstRow = table.createRow();
+        }
+        firstRow.setHeight(ROW_HEIGHT);
+
+        firstCell = firstRow.getCell(1);
+        setCellText(firstCell, tableInfo.getTableComment(), ROW_COLOR, ROW_CEL_WIDTH);
     }
 
     /**
