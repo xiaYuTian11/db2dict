@@ -24,6 +24,7 @@ import static top.tanmw.db2dict.entity.DbConstant.*;
 public abstract class AbstractDbConfig implements DbConfig {
     public Connection connection = null;
     public DatabaseMetaData metaData = null;
+    public String username = "";
 
     @Override
     public void init(Properties properties) {
@@ -32,7 +33,7 @@ public abstract class AbstractDbConfig implements DbConfig {
             // 使用InPutStream流读取properties文件
             final String driver = properties.getProperty(DRIVER);
             final String url = properties.getProperty(URL);
-            final String username = properties.getProperty(USERNAME);
+            username = properties.getProperty(USERNAME);
             final String password = properties.getProperty(PASSWORD);
 
             Class.forName(driver);
