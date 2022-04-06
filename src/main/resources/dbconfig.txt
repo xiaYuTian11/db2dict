@@ -1,9 +1,9 @@
 ## 注意mysql url 需要在后面添加 nullCatalogMeansCurrent=true
-url=jdbc:postgresql://192.168.0.245:5432/devdb?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
-driver=org.postgresql.Driver
-username=postgres
-password=20191809
+url=jdbc:dm://127.0.0.1:5236/ZBBSMZ?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
+driver=dm.jdbc.driver.DmDriver
+username=SYSDBA
+password=SYSDBA
 ## mysql,oracle,pgsql,kingbase,dm
-type=mysql
+type=dm
 ## 导出路径
-exportPath=C:\\Users\\tmw\\Desktop\\代码注释\\police_new数据字典.doc
+exportPath=C:\\Users\\tmw\\Desktop\\编办数据字典.doc
