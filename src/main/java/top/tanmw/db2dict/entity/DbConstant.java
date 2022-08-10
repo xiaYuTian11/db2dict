@@ -48,6 +48,7 @@ public class DbConstant {
     public static String USERNAME = "username";
     public static String PASSWORD = "password";
     public static String TYPE = "type";
+    public static String EXCLUDE_PREFIX = "excludePrefix";
     public static String EXPORT_PATH = "exportPath";
 
 }

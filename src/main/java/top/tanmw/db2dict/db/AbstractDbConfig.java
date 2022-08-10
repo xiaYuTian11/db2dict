@@ -2,6 +2,7 @@ package top.tanmw.db2dict.db;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import top.tanmw.db2dict.entity.DbConstant;
 import top.tanmw.db2dict.entity.TableInfo;
 
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -25,6 +27,7 @@ public abstract class AbstractDbConfig implements DbConfig {
     public Connection connection = null;
     public DatabaseMetaData metaData = null;
     public String username = "";
+    public String[] excludePrefixList = new String[]{};
 
     @Override
     public void init(Properties properties) {
@@ -39,6 +42,11 @@ public abstract class AbstractDbConfig implements DbConfig {
             Class.forName(driver);
             connection = DriverManager.getConnection(url, username, password);
             metaData = connection.getMetaData();
+
+            String excludePrefix = properties.getProperty(DbConstant.EXCLUDE_PREFIX);
+            if (StrUtil.isNotBlank(excludePrefix)) {
+                excludePrefixList = excludePrefix.split(",");
+            }
         } catch (Exception e) {
             log.error("连接数据库失败", e);
         }
@@ -57,8 +65,9 @@ public abstract class AbstractDbConfig implements DbConfig {
             // 表信息
             String tableName = tableResultSet.getString("TABLE_NAME");
             String remarkes = tableResultSet.getString("REMARKS");
+            remarkes = StrUtil.isNotBlank(remarkes) ? remarkes : tableName;
             List<List<String>> fieldList = new ArrayList<>(64);
-            if (StrUtil.isNotBlank(tableName)) {
+            if (StrUtil.isNotBlank(tableName) && !StrUtil.startWithAny(tableName, excludePrefixList)) {
                 log.info("...读取 {} 表结构...", tableName);
                 // 表结构
                 ResultSet resultSet = metaData.getColumns(null, "%", tableName, "%");
@@ -66,15 +75,20 @@ public abstract class AbstractDbConfig implements DbConfig {
                     List<String> columnList = new ArrayList<>();
                     for (String fieldName : TABLE_RELATION.keySet()) {
                         final String column = resultSet.getString(fieldName);
-                        columnList.add(column);
+                        if(StrUtil.equalsIgnoreCase(fieldName,"REMARKS")&&StrUtil.isBlank(column)){
+                            columnList.add(columnList.get(0));
+                        }else{
+                            columnList.add(column);
+                        }
+
                     }
                     fieldList.add(columnList);
                 }
+                final TableInfo tableInfo = TableInfo.builder().tableName(tableName).tableComment(remarkes)
+                        .title(tableName + "(" + remarkes + ")")
+                        .fieldList(fieldList).build();
+                tableInfoList.add(tableInfo);
             }
-            final TableInfo tableInfo = TableInfo.builder().tableName(tableName).tableComment(remarkes)
-                    .title(tableName + "(" + remarkes + ")")
-                    .fieldList(fieldList).build();
-            tableInfoList.add(tableInfo);
         }
         return tableInfoList;
     }
