@@ -8,8 +8,7 @@ import top.tanmw.db2dict.entity.TableInfo;
 import top.tanmw.db2dict.word.WordConfig;
 import top.tanmw.db2dict.word.WordUtil;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -37,6 +36,26 @@ public class Application {
         final List<TableInfo> tableList = dbConfig.getTableList();
         WordUtil wordUtil = new WordUtil();
         wordUtil.writeTableToWord(tableList);
+    }
+
+    public static void run(String url) throws Exception {
+        final Properties prop = getProperties(url);
+        if (Objects.isNull(prop)) {
+            return;
+        }
+        DbConfig dbConfig = DbConfigFactory.getDbConfig();
+        dbConfig.init(prop);
+        final List<TableInfo> tableList = dbConfig.getTableList();
+        WordUtil wordUtil = new WordUtil();
+        wordUtil.writeTableToWord(tableList);
+    }
+
+    public static Properties getProperties(String url) throws Exception {
+        Properties properties = new Properties();
+        File file = new File(url);
+        InputStream in = new FileInputStream(file);
+        properties.load(in);
+        return properties;
     }
 
     public static Properties getProp() {
