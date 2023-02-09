@@ -1,5 +1,6 @@
 package top.tanmw.db2dict.db;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.tanmw.db2dict.entity.DbConstant;
@@ -28,6 +29,7 @@ public abstract class AbstractDbConfig implements DbConfig {
     public DatabaseMetaData metaData = null;
     public String username = "";
     public String[] excludePrefixList = new String[]{};
+    public String[] includePrefixList = new String[]{};
 
     @Override
     public void init(Properties properties) {
@@ -46,6 +48,13 @@ public abstract class AbstractDbConfig implements DbConfig {
             String excludePrefix = properties.getProperty(DbConstant.EXCLUDE_PREFIX);
             if (StrUtil.isNotBlank(excludePrefix)) {
                 excludePrefixList = excludePrefix.split(",");
+                excludePrefixList = (String[]) Arrays.stream(excludePrefixList).map(String::toLowerCase).toArray();
+            }
+
+            String includePrefix = properties.getProperty(INCLUDE_PREFIX);
+            if (StrUtil.isNotBlank(includePrefix)) {
+                includePrefixList = includePrefix.split(",");
+                includePrefixList = (String[]) Arrays.stream(includePrefixList).map(String::toLowerCase).toArray();
             }
         } catch (Exception e) {
             log.error("连接数据库失败", e);
@@ -68,6 +77,9 @@ public abstract class AbstractDbConfig implements DbConfig {
             remarkes = StrUtil.isNotBlank(remarkes) ? remarkes : tableName;
             List<List<String>> fieldList = new ArrayList<>(64);
             if (StrUtil.isNotBlank(tableName) && !StrUtil.startWithAny(tableName, excludePrefixList)) {
+                if (includePrefixList.length > 0 && !StrUtil.startWithAny(tableName, includePrefixList)) {
+                    continue;
+                }
                 log.info("...读取 {} 表结构...", tableName);
                 // 表结构
                 ResultSet resultSet = metaData.getColumns(null, "%", tableName, "%");
@@ -75,9 +87,9 @@ public abstract class AbstractDbConfig implements DbConfig {
                     List<String> columnList = new ArrayList<>();
                     for (String fieldName : TABLE_RELATION.keySet()) {
                         final String column = resultSet.getString(fieldName);
-                        if(StrUtil.equalsIgnoreCase(fieldName,"REMARKS")&&StrUtil.isBlank(column)){
+                        if (StrUtil.equalsIgnoreCase(fieldName, "REMARKS") && StrUtil.isBlank(column)) {
                             columnList.add(columnList.get(0));
-                        }else{
+                        } else {
                             columnList.add(column);
                         }
 
