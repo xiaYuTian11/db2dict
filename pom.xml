@@ -6,7 +6,7 @@
 
     <groupId>top.tanmw</groupId>
     <artifactId>db2dict</artifactId>
-    <version>0.0.2</version>
+    <version>1.0.0</version>
     <name>db2dict</name>
     <description>数据字典生成</description>
     <url>https://github.com/xiaYuTian11/db2dict</url>
