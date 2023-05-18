@@ -8,7 +8,11 @@ import top.tanmw.db2dict.entity.TableInfo;
 import top.tanmw.db2dict.word.WordConfig;
 import top.tanmw.db2dict.word.WordUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -39,13 +43,11 @@ public class Application {
     }
 
     public static void run(String url) throws Exception {
-        final Properties prop = getProperties(url);
-        if (Objects.isNull(prop)) {
-            return;
-        }
+        Properties prop = getProperties(url);
+        initProp(prop);
         DbConfig dbConfig = DbConfigFactory.getDbConfig();
         dbConfig.init(prop);
-        final List<TableInfo> tableList = dbConfig.getTableList();
+        List<TableInfo> tableList = dbConfig.getTableList();
         WordUtil wordUtil = new WordUtil();
         wordUtil.writeTableToWord(tableList);
     }
@@ -53,7 +55,7 @@ public class Application {
     public static Properties getProperties(String url) throws Exception {
         Properties properties = new Properties();
         File file = new File(url);
-        InputStream in = new FileInputStream(file);
+        InputStream in = Files.newInputStream(file.toPath());
         properties.load(in);
         return properties;
     }
@@ -66,13 +68,17 @@ public class Application {
             final String configPath = Application.class.getClassLoader().getResource("dbconfig.txt").getPath();
             BufferedReader bufferedReader = new BufferedReader(new FileReader(configPath));
             properties.load(bufferedReader);
-            dbEnum = DbEnum.getDbEnum(properties.getProperty(TYPE));
-            WordConfig.EXPORT_FILE_PATH = properties.getProperty(EXPORT_PATH);
+            initProp(properties);
             return properties;
         } catch (Exception e) {
             log.error("读取配置文件失败", e);
             return null;
         }
+    }
+
+    public static void initProp(Properties properties) {
+        dbEnum = DbEnum.getDbEnum(properties.getProperty(TYPE));
+        WordConfig.EXPORT_FILE_PATH = properties.getProperty(EXPORT_PATH);
     }
 
 }
