@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import static top.tanmw.db2dict.entity.DbConstant.*;
 
@@ -54,7 +55,7 @@ public abstract class AbstractDbConfig implements DbConfig {
             String includePrefix = properties.getProperty(INCLUDE_PREFIX);
             if (StrUtil.isNotBlank(includePrefix)) {
                 includePrefixList = includePrefix.split(",");
-                includePrefixList = (String[]) Arrays.stream(includePrefixList).map(String::toLowerCase).toArray();
+                includePrefixList = Arrays.stream(includePrefixList).map(String::toLowerCase).toArray(String[]::new);
             }
         } catch (Exception e) {
             log.error("连接数据库失败", e);
@@ -76,8 +77,8 @@ public abstract class AbstractDbConfig implements DbConfig {
             String remarkes = tableResultSet.getString("REMARKS");
             remarkes = StrUtil.isNotBlank(remarkes) ? remarkes : tableName;
             List<List<String>> fieldList = new ArrayList<>(64);
-            if (StrUtil.isNotBlank(tableName) && !StrUtil.startWithAny(tableName, excludePrefixList)) {
-                if (includePrefixList.length > 0 && !StrUtil.startWithAny(tableName, includePrefixList)) {
+            if (StrUtil.isNotBlank(tableName) && !StrUtil.startWithAny(tableName.toLowerCase(), excludePrefixList)) {
+                if (includePrefixList.length > 0 && !StrUtil.startWithAny(tableName.toLowerCase(), includePrefixList)) {
                     continue;
                 }
                 log.info("...读取 {} 表结构...", tableName);

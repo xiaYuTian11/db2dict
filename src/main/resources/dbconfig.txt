@@ -5,7 +5,9 @@ username=postgres
 password=20191809
 ## mysql,oracle,pgsql,kingbase,dm
 type=pgsql
+## 包含指定前缀的表
+includePrefix=sys
 ## 去除指定前缀表
 excludePrefix=
 ## 导出路径,windwos 写两个 \\
-exportPath=C:\Users\Administrator\Desktop\政策库数据字典.doc
+exportPath=C:\\Users\\Administrator\\Desktop\\政策库数据字典.doc
