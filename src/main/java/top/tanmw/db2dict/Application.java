@@ -8,10 +8,8 @@ import top.tanmw.db2dict.entity.TableInfo;
 import top.tanmw.db2dict.word.WordConfig;
 import top.tanmw.db2dict.word.WordUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
@@ -52,11 +50,16 @@ public class Application {
         wordUtil.writeTableToWord(tableList);
     }
 
+    public static void run() throws Exception {
+        String path = Application.class.getClassLoader().getResource("dbconfig.txt").getPath();
+        Application.run(path);
+    }
+
     public static Properties getProperties(String url) throws Exception {
         Properties properties = new Properties();
         File file = new File(url);
         InputStream in = Files.newInputStream(file.toPath());
-        properties.load(in);
+        properties.load(new InputStreamReader(in, StandardCharsets.UTF_8));
         return properties;
     }
 

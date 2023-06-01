@@ -4,7 +4,31 @@
 
 ## 快速使用
 
-1.引入依赖
+1.指定maven仓库
+```xml
+
+<repositories>
+    <repository>
+        <id>maven-public</id>
+        <name>maven-public</name>
+        <url>https://repo.maven.apache.org/maven2/</url>
+        <layout>default</layout>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+    <repository>
+        <id>alimaven</id>
+        <name>aliyun maven</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    </repository>
+</repositories>
+```
+
+2.引入依赖
 ```xml
 
 <dependency>
@@ -15,7 +39,7 @@
 ```
 
 
-2.在resources文件下配置dbconfig.txt
+3.在resources文件下配置dbconfig.txt
 ```properties
 ## 注意mysql url 需要在后面添加 nullCatalogMeansCurrent=true
 url=jdbc:postgresql://192.168.0.245:5432/devdb
@@ -32,7 +56,7 @@ excludePrefix=
 exportPath=C:\\Users\\Administrator\\Desktop\\政策库数据字典.doc
 ```
 
-3.运行
+4.运行
 ```java
 public class Main {
     public static void main(String[] args) throws Exception{
