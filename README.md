@@ -11,7 +11,7 @@
     <repository>
         <id>maven-public</id>
         <name>maven-public</name>
-        <url>https://repo.maven.apache.org/maven2/</url>
+        <url>https://s01.oss.sonatype.org/content/repositories/releases</url>
         <layout>default</layout>
         <releases>
             <enabled>true</enabled>
