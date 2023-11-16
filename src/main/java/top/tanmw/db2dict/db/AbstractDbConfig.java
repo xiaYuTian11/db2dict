@@ -49,7 +49,8 @@ public abstract class AbstractDbConfig implements DbConfig {
             String excludePrefix = properties.getProperty(DbConstant.EXCLUDE_PREFIX);
             if (StrUtil.isNotBlank(excludePrefix)) {
                 excludePrefixList = excludePrefix.split(",");
-                excludePrefixList = (String[]) Arrays.stream(excludePrefixList).map(String::toLowerCase).toArray();
+                excludePrefixList = Arrays.stream(excludePrefixList).map(String::toLowerCase).toArray(String[]::new);
+                        // (String[]) Arrays.stream(excludePrefixList).map(String::toLowerCase).toArray();
             }
 
             String includePrefix = properties.getProperty(INCLUDE_PREFIX);
@@ -77,8 +78,8 @@ public abstract class AbstractDbConfig implements DbConfig {
             String remarkes = tableResultSet.getString("REMARKS");
             remarkes = StrUtil.isNotBlank(remarkes) ? remarkes : tableName;
             List<List<String>> fieldList = new ArrayList<>(64);
-            if (StrUtil.isNotBlank(tableName) && !StrUtil.startWithAny(tableName.toLowerCase(), excludePrefixList)) {
-                if (includePrefixList.length > 0 && !StrUtil.startWithAny(tableName.toLowerCase(), includePrefixList)) {
+            if (StrUtil.isNotBlank(tableName) && !StrUtil.startWithAnyIgnoreCase(tableName.toLowerCase(), excludePrefixList)) {
+                if (includePrefixList.length > 0 && !StrUtil.startWithAnyIgnoreCase(tableName.toLowerCase(), includePrefixList)) {
                     continue;
                 }
                 log.info("...读取 {} 表结构...", tableName);
