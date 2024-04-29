@@ -26,7 +26,7 @@ import static top.tanmw.db2dict.entity.DbConstant.TYPE;
  * @since 2022/2/10 9:25
  */
 @Slf4j
-public class Application {
+public class Db2dictApplication {
 
     public static void main(String[] args) throws Exception {
         Properties prop = getProp();
@@ -51,8 +51,8 @@ public class Application {
     }
 
     public static void run() throws Exception {
-        String path = Application.class.getClassLoader().getResource("dbconfig.txt").getPath();
-        Application.run(path);
+        String path = Db2dictApplication.class.getClassLoader().getResource("dbconfig.txt").getPath();
+        Db2dictApplication.run(path);
     }
 
     public static Properties getProperties(String url) throws Exception {
@@ -68,7 +68,7 @@ public class Application {
         try {
             log.info("...读取配置文件...");
             // 使用InPutStream流读取properties文件
-            final String configPath = Application.class.getClassLoader().getResource("dbconfig.txt").getPath();
+            final String configPath = Db2dictApplication.class.getClassLoader().getResource("dbconfig.txt").getPath();
             BufferedReader bufferedReader = new BufferedReader(new FileReader(configPath));
             properties.load(bufferedReader);
             initProp(properties);
